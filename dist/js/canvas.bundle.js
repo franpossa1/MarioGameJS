@@ -86,6 +86,45 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "./src/img/background.png":
+/*!********************************!*\
+  !*** ./src/img/background.png ***!
+  \********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "072d51bcc9c09311d4c2a6708b05bddc.png");
+
+/***/ }),
+
+/***/ "./src/img/hills.png":
+/*!***************************!*\
+  !*** ./src/img/hills.png ***!
+  \***************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "cfffe4c371f5e11d372b398a87c51dd0.png");
+
+/***/ }),
+
+/***/ "./src/img/platform.png":
+/*!******************************!*\
+  !*** ./src/img/platform.png ***!
+  \******************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "ffab39d3487de561be1a081fcfb3806d.png");
+
+/***/ }),
+
 /***/ "./src/js/canvas.js":
 /*!**************************!*\
   !*** ./src/js/canvas.js ***!
@@ -95,114 +134,295 @@
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./utils */ "./src/js/utils.js");
-/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_utils__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _img_platform_png__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../img/platform.png */ "./src/img/platform.png");
+/* harmony import */ var _img_hills_png__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../img/hills.png */ "./src/img/hills.png");
+/* harmony import */ var _img_background_png__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../img/background.png */ "./src/img/background.png");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
 
 
-var canvas = document.querySelector('canvas');
-var c = canvas.getContext('2d');
-canvas.width = innerWidth;
-canvas.height = innerHeight;
-var mouse = {
-  x: innerWidth / 2,
-  y: innerHeight / 2
-};
-var colors = ['#2185C5', '#7ECEFD', '#FFF6E5', '#FF7F66']; // Event Listeners
 
-addEventListener('mousemove', function (event) {
-  mouse.x = event.clientX;
-  mouse.y = event.clientY;
-});
-addEventListener('resize', function () {
-  canvas.width = innerWidth;
-  canvas.height = innerHeight;
-  init();
-}); // Objects
 
-var _Object = /*#__PURE__*/function () {
-  function Object(x, y, radius, color) {
-    _classCallCheck(this, Object);
+var canvas = document.querySelector("canvas");
+var ctx = canvas.getContext("2d");
+canvas.width = 1024;
+canvas.height = 576;
+var gravedad = 1.2;
+var scrollAlcanzado = 0;
+var imagenplata = new Image();
+imagenplata.src = _img_platform_png__WEBPACK_IMPORTED_MODULE_0__["default"]; // JUGADOR
 
-    this.x = x;
-    this.y = y;
-    this.radius = radius;
-    this.color = color;
+var Jugador = /*#__PURE__*/function () {
+  function Jugador() {
+    _classCallCheck(this, Jugador);
+
+    this.posicion = {
+      x: 100,
+      y: 100
+    };
+    this.velocidad = {
+      x: 0,
+      y: 1
+    };
+    this.width = 30, this.height = 30;
   }
 
-  _createClass(Object, [{
+  _createClass(Jugador, [{
     key: "draw",
     value: function draw() {
-      c.beginPath();
-      c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
-      c.fillStyle = this.color;
-      c.fill();
-      c.closePath();
+      ctx.fillStyle = "red";
+      ctx.fillRect(this.posicion.x, this.posicion.y, this.width, this.height);
     }
   }, {
     key: "update",
     value: function update() {
       this.draw();
+      this.posicion.y += this.velocidad.y;
+      this.posicion.x += this.velocidad.x;
+
+      if (this.height + this.posicion.y + this.velocidad.y <= canvas.height) {
+        this.velocidad.y += gravedad;
+      }
     }
   }]);
 
-  return Object;
-}(); // Implementation
+  return Jugador;
+}(); //PLATAFORMA
 
 
-var objects;
+var Plataforma = /*#__PURE__*/function () {
+  function Plataforma(_ref) {
+    var x = _ref.x,
+        y = _ref.y,
+        imagen = _ref.imagen;
 
-function init() {
-  objects = [];
+    _classCallCheck(this, Plataforma);
 
-  for (var i = 0; i < 400; i++) {// objects.push()
+    this.posicion = {
+      x: x,
+      y: y
+    };
+    this.imagen = imagen, this.width = imagen.width, this.height = imagen.height;
   }
-} // Animation Loop
+
+  _createClass(Plataforma, [{
+    key: "draw",
+    value: function draw() {
+      ctx.drawImage(this.imagen, this.posicion.x, this.posicion.y);
+    }
+  }]);
+
+  return Plataforma;
+}(); //Decoraciones
 
 
-function animate() {
-  requestAnimationFrame(animate);
-  c.clearRect(0, 0, canvas.width, canvas.height);
-  c.fillText('HTML CANVAS BOILERPLATE', mouse.x, mouse.y); // objects.forEach(object => {
-  //  object.update()
-  // })
+var Decoraciones = /*#__PURE__*/function () {
+  function Decoraciones(_ref2) {
+    var x = _ref2.x,
+        y = _ref2.y,
+        imagen = _ref2.imagen;
+
+    _classCallCheck(this, Decoraciones);
+
+    this.posicion = {
+      x: x,
+      y: y
+    };
+    this.imagen = imagen, this.width = imagen.width, this.height = imagen.height;
+  }
+
+  _createClass(Decoraciones, [{
+    key: "draw",
+    value: function draw() {
+      ctx.drawImage(this.imagen, this.posicion.x, this.posicion.y);
+    }
+  }]);
+
+  return Decoraciones;
+}(); // creacion de objetos a partir de las clases
+
+
+function creadorDeImagenes(imgSrc) {
+  var imagen = new Image();
+  imagen.src = imgSrc;
+  return imagen;
 }
 
-init();
-animate();
-
-/***/ }),
-
-/***/ "./src/js/utils.js":
-/*!*************************!*\
-  !*** ./src/js/utils.js ***!
-  \*************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-function randomIntFromRange(min, max) {
-  return Math.floor(Math.random() * (max - min + 1) + min);
-}
-
-function randomColor(colors) {
-  return colors[Math.floor(Math.random() * colors.length)];
-}
-
-function distance(x1, y1, x2, y2) {
-  var xDist = x2 - x1;
-  var yDist = y2 - y1;
-  return Math.sqrt(Math.pow(xDist, 2) + Math.pow(yDist, 2));
-}
-
-module.exports = {
-  randomIntFromRange: randomIntFromRange,
-  randomColor: randomColor,
-  distance: distance
+var plataSrc = creadorDeImagenes(_img_platform_png__WEBPACK_IMPORTED_MODULE_0__["default"]);
+var jugador1 = new Jugador();
+var plataformas = [new Plataforma({
+  x: -1,
+  y: 470,
+  imagen: plataSrc
+}), new Plataforma({
+  x: plataSrc.width - 3,
+  y: 470,
+  imagen: plataSrc
+}), new Plataforma({
+  x: plataSrc.width * 2 + 100,
+  y: 470,
+  imagen: plataSrc
+})];
+var deco = [new Decoraciones({
+  x: -1,
+  y: -1,
+  imagen: creadorDeImagenes(_img_background_png__WEBPACK_IMPORTED_MODULE_2__["default"])
+}), new Decoraciones({
+  x: -1,
+  y: -1,
+  imagen: creadorDeImagenes(_img_hills_png__WEBPACK_IMPORTED_MODULE_1__["default"])
+}), new Decoraciones({
+  x: creadorDeImagenes(_img_hills_png__WEBPACK_IMPORTED_MODULE_1__["default"]).width,
+  y: -1,
+  imagen: creadorDeImagenes(_img_hills_png__WEBPACK_IMPORTED_MODULE_1__["default"])
+})];
+var teclas = {
+  derecha: {
+    presionada: false
+  },
+  izquierda: {
+    presionada: false
+  }
 };
+
+function iniciarOtraVez() {
+  jugador1 = new Jugador();
+  plataformas = [new Plataforma({
+    x: -1,
+    y: 470,
+    imagen: plataSrc
+  }), new Plataforma({
+    x: plataSrc.width - 3,
+    y: 470,
+    imagen: plataSrc
+  }), new Plataforma({
+    x: plataSrc.width * 2 + 100,
+    y: 470,
+    imagen: plataSrc
+  })];
+  deco = [new Decoraciones({
+    x: -1,
+    y: -1,
+    imagen: creadorDeImagenes(_img_background_png__WEBPACK_IMPORTED_MODULE_2__["default"])
+  }), new Decoraciones({
+    x: -1,
+    y: -1,
+    imagen: creadorDeImagenes(_img_hills_png__WEBPACK_IMPORTED_MODULE_1__["default"])
+  }), new Decoraciones({
+    x: creadorDeImagenes(_img_hills_png__WEBPACK_IMPORTED_MODULE_1__["default"]).width,
+    y: -1,
+    imagen: creadorDeImagenes(_img_hills_png__WEBPACK_IMPORTED_MODULE_1__["default"])
+  })];
+} //creamos una funcion que realiza el  moviemiento de manera constante, un loop
+
+
+function animacion() {
+  //informa al navegador que quieres realizar una animación y solicita que el navegador programe el repintado de la ventana para el próximo
+  //ciclo de animación. El método acepta como argumento una función a la que llamar antes de efectuar el repintado.
+  requestAnimationFrame(animacion);
+  ctx.fillStyle = "white";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  deco.forEach(function (deco) {
+    deco.draw();
+  });
+  plataformas.forEach(function (cadaPlataforma) {
+    cadaPlataforma.draw();
+  });
+  jugador1.update(); //movimiento derecha izq
+
+  if (teclas.derecha.presionada && jugador1.posicion.x < 400) {
+    jugador1.velocidad.x = 5;
+  } else if (teclas.izquierda.presionada && jugador1.posicion.x > 100) {
+    jugador1.velocidad.x = -5;
+  } else {
+    jugador1.velocidad.x = 0;
+
+    if (teclas.derecha.presionada) {
+      scrollAlcanzado += 5;
+      plataformas.forEach(function (plataforma) {
+        return plataforma.posicion.x -= 5;
+      });
+      deco.forEach(function (deco) {
+        deco.posicion.x -= 3;
+      });
+    } else if (teclas.izquierda.presionada) {
+      scrollAlcanzado -= 5;
+      plataformas.forEach(function (plataforma) {
+        return plataforma.posicion.x += 5;
+      });
+      deco.forEach(function (deco) {
+        deco.posicion.x += 3;
+      });
+    } //win condition
+
+
+    if (scrollAlcanzado > 2000) console.log("Ganador del Juego");
+
+    if (jugador1.posicion.y > canvas.height + 320) {
+      iniciarOtraVez();
+    }
+  } //colision de plataformas rectangulares
+  //la idea es que no exista velocidad en el eje y para que solo actue la gravedad
+  //la velocidad se vueleve 0 cuando la posicion del jugador en x es menor o mayor a la de la plataforma,
+  //asi cuando no esta en la posicion donde esta la plataforma, cae por gravedad ya qye ka velocidad es pisiutiva
+
+
+  plataformas.forEach(function (plataforma) {
+    if (jugador1.posicion.y + jugador1.height <= plataforma.posicion.y && jugador1.posicion.y + jugador1.height + jugador1.velocidad.y >= plataforma.posicion.y && jugador1.posicion.x + jugador1.width >= plataforma.posicion.x && jugador1.posicion.x <= plataforma.posicion.x + plataforma.width) {
+      jugador1.velocidad.y = 0;
+    }
+  });
+} //EJECUCION
+
+
+animacion(); //event linstener
+
+addEventListener("keydown", function (_ref3) {
+  var keyCode = _ref3.keyCode;
+
+  //console.log({keyCode}  );
+  switch (keyCode) {
+    case 65:
+      teclas.izquierda.presionada = true;
+      break;
+
+    case 68:
+      teclas.derecha.presionada = true;
+      break;
+
+    case 87:
+      jugador1.velocidad.y -= 20;
+      break;
+
+    case 83:
+      break;
+
+    default:
+      break;
+  }
+});
+addEventListener("keyup", function (_ref4) {
+  var keyCode = _ref4.keyCode;
+
+  switch (keyCode) {
+    case 65:
+      teclas.izquierda.presionada = false;
+      break;
+
+    case 68:
+      teclas.derecha.presionada = false;
+      break;
+
+    case 83:
+      break;
+
+    default:
+      break;
+  }
+});
 
 /***/ })
 

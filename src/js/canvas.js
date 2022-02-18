@@ -6,7 +6,6 @@ import spriteRunRight from "../img/spriteRunRight.png";
 import spriteRunLeft from "../img/spriteRunLeft.png";
 import spriteStandleft from "../img/spriteStandRight.png";
 import spriteStandRight from "../img/spriteStandLeft.png";
-console.log(spriteRunLeft);
 
 const canvas = document.querySelector("canvas");
 
@@ -16,7 +15,7 @@ canvas.width = 1024;
 canvas.height = 576;
 const gravedad = 1.2;
 let scrollAlcanzado = 0;
-let teclaActual;
+let ultimaTecla = "";
 
 const imagenplata = new Image();
 imagenplata.src = plataformx;
@@ -34,25 +33,29 @@ class Jugador {
       y: 1,
     };
     (this.frames = 0),
-      (this.image = creadorDeImagenes(spriteStandleft)),
+      (this.image = creadorDeImagenes(spriteStandRight)),
       (this.width = 66),
       (this.height = 150);
     this.sprites = {
       ergido: {
         derecha: creadorDeImagenes(spriteStandleft),
-        cropWidth: 177,
         izquierda: creadorDeImagenes(spriteStandRight),
+        cropWidth: 177,
         ancho: 66,
       },
+
       correr: {
         derecha: creadorDeImagenes(spriteRunRight),
+        izquierda: creadorDeImagenes(spriteRunLeft),
         cropWidth: 341,
         ancho: 127.875,
-        izquierda: creadorDeImagenes(spriteRunLeft),
       },
     };
+    //algo est amal en la lectura de las posturas revisar!!
+
     this.correrActual = this.sprites.ergido.derecha;
     this.cropActual = this.sprites.ergido.cropWidth;
+    this.width = this.sprites.ergido.ancho;
   }
 
   draw() {
@@ -71,19 +74,20 @@ class Jugador {
   update() {
     this.frames++;
     if (
-      (this.frames > 59 &&
-        this.correrActual === jugador1.sprites.ergido.derecha) ||
-      this.correrActual === jugador1.sprites.ergido.izquierda
+      this.frames > 59 &&
+      (this.correrActual === jugador1.sprites.ergido.izquierda ||
+        this.correrActual === jugador1.sprites.ergido.derecha)
     )
       this.frames = 0;
     else if (
-      (this.frames > 29 &&
-        this.correrActual === jugador1.sprites.correr.derecha) ||
-      this.correrActual === jugador1.sprites.correr.izquierda
-    ) {
+      this.frames > 29 &&
+      (this.correrActual === jugador1.sprites.correr.izquierda ||
+        this.correrActual === jugador1.sprites.correr.derecha)
+    )
       this.frames = 0;
-    }
-    console.log(this.frames);
+
+    console.log("frames: " + this.frames);
+
     this.draw();
     this.posicion.y += this.velocidad.y;
     this.posicion.x += this.velocidad.x;
@@ -218,17 +222,44 @@ function animacion() {
       });
     }
 
-  if (teclaActual ==="derecha" && jugador1.correrActual!==jugador1.sprites.correr.derecha){
-    jugador1.frames = 1
-    jugador1.correrActual = jugador1.sprites.correr.derecha;
-    jugador1.cropActual = jugador1.sprites.correr.cropWidth;
-    jugador1.width = jugador1.sprites.correr.ancho;
-  }    else if (teclaActual ==="izquierda" && jugador1.correrActual !==jugador1.sprites.correr.izquierda){
-    jugador1.frames = 1
-    jugador1.correrActual = jugador1.sprites.correr.izquierda;
-    jugador1.cropActual = jugador1.sprites.correr.cropWidth;
-    jugador1.width = jugador1.sprites.correr.ancho;
-  } else {}
+    //movimiento de sprites
+
+    if (
+      teclas.derecha.presionada &&
+      ultimaTecla === "derecha" &&
+      jugador1.correrActual !== jugador1.sprites.correr.derecha
+    ) {
+      jugador1.frames = 1;
+      jugador1.correrActual = jugador1.sprites.correr.derecha;
+      jugador1.cropActual = jugador1.sprites.correr.cropWidth;
+      jugador1.width = jugador1.sprites.correr.ancho;
+    } else if (
+      teclas.izquierda.presionada &&
+      ultimaTecla === "izquierda" &&
+      jugador1.correrActual != jugador1.sprites.correr.izquierda
+    ) {
+      jugador1.frames = 1;
+      jugador1.correrActual = jugador1.sprites.correr.izquierda;
+      jugador1.cropActual = jugador1.sprites.correr.cropWidth;
+      jugador1.width = jugador1.sprites.correr.ancho;
+    } else if (
+      !teclas.derecha.presionada &&
+      ultimaTecla === "derecha" &&
+      jugador1.correrActual != jugador1.sprites.ergido.derecha
+    ) {
+      jugador1.correrActual = jugador1.sprites.ergido.derecha;
+      jugador1.cropActual = jugador1.sprites.ergido.cropWidth;
+      jugador1.width = jugador1.sprites.ergido.ancho;
+    } else if (
+      !teclas.izquierda.presionada &&
+      ultimaTecla === "izquierda" &&
+      jugador1.correrActual != jugador1.sprites.ergido.izquierda
+    ) {
+      jugador1.correrActual = jugador1.sprites.ergido.izquierda;
+      jugador1.cropActual = jugador1.sprites.ergido.cropWidth;
+      jugador1.width = jugador1.sprites.ergido.ancho;
+    }
+
     //win condition
 
     if (scrollAlcanzado > plataSrc.width * 5 + 500)
@@ -262,13 +293,12 @@ addEventListener("keydown", ({ keyCode }) => {
   switch (keyCode) {
     case 65:
       teclas.izquierda.presionada = true;
-      teclaActual = "izquierda"
-     
+      ultimaTecla = "izquierda";
 
       break;
     case 68:
       teclas.derecha.presionada = true;
-  teclaActual = "derecha";
+      ultimaTecla = "derecha";
       break;
     case 87:
       jugador1.velocidad.y -= 20;
@@ -287,15 +317,9 @@ addEventListener("keyup", ({ keyCode }) => {
     case 65:
       teclas.izquierda.presionada = false;
 
-      jugador1.correrActual = jugador1.sprites.ergido.derecha;
-      jugador1.cropActual = jugador1.sprites.ergido.cropWidth;
-      jugador1.width = jugador1.sprites.ergido.ancho;
       break;
     case 68:
       teclas.derecha.presionada = false;
-      jugador1.correrActual = jugador1.sprites.ergido.derecha;
-      jugador1.cropActual = jugador1.sprites.ergido.cropWidth;
-      jugador1.width = jugador1.sprites.ergido.ancho;
 
       break;
 

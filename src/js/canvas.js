@@ -16,6 +16,12 @@ canvas.height = 576;
 const gravedad = 1.2;
 let scrollAlcanzado = 0;
 let ultimaTecla = "";
+//reinicio al ganar
+let juju = document.getElementById("empezar");
+const nuevo = document.querySelector(".reinicio");
+nuevo.addEventListener("click",()=>{
+  iniciarOtraVez()
+})
 
 const imagenplata = new Image();
 imagenplata.src = plataformx;
@@ -86,7 +92,7 @@ class Jugador {
     )
       this.frames = 0;
 
-    console.log("frames: " + this.frames);
+    
 
     this.draw();
     this.posicion.y += this.velocidad.y;
@@ -154,6 +160,8 @@ let teclas = {
 };
 
 function iniciarOtraVez() {
+  juju.classList.add("hide");
+  scrollAlcanzado = 0;
   jugador1 = new Jugador();
 
   plataformas = [
@@ -262,8 +270,13 @@ function animacion() {
 
     //win condition
 
-    if (scrollAlcanzado > plataSrc.width * 5 + 500)
-      console.log("Ganador del Juego");
+    if (scrollAlcanzado > plataSrc.width * 5 + 500){
+      console.log("ganaste");
+      
+       juju.classList.remove("hide")
+    }
+    
+      //juju.classList.toggle("hide")
     if (jugador1.posicion.y > canvas.height + 320) {
       iniciarOtraVez();
     }

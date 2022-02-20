@@ -227,7 +227,13 @@ canvas.width = 1024;
 canvas.height = 576;
 var gravedad = 1.2;
 var scrollAlcanzado = 0;
-var ultimaTecla = "";
+var ultimaTecla = ""; //reinicio al ganar
+
+var juju = document.getElementById("empezar");
+var nuevo = document.querySelector(".reinicio");
+nuevo.addEventListener("click", function () {
+  iniciarOtraVez();
+});
 var imagenplata = new Image();
 imagenplata.src = _img_platform_png__WEBPACK_IMPORTED_MODULE_0__["default"]; // JUGADOR
 
@@ -275,7 +281,6 @@ var Jugador = /*#__PURE__*/function () {
     value: function update() {
       this.frames++;
       if (this.frames > 59 && (this.correrActual === jugador1.sprites.ergido.izquierda || this.correrActual === jugador1.sprites.ergido.derecha)) this.frames = 0;else if (this.frames > 29 && (this.correrActual === jugador1.sprites.correr.izquierda || this.correrActual === jugador1.sprites.correr.derecha)) this.frames = 0;
-      console.log("frames: " + this.frames);
       this.draw();
       this.posicion.y += this.velocidad.y;
       this.posicion.x += this.velocidad.x;
@@ -363,6 +368,8 @@ var teclas = {
 };
 
 function iniciarOtraVez() {
+  juju.classList.add("hide");
+  scrollAlcanzado = 0;
   jugador1 = new Jugador();
   plataformas = [new Plataforma({
     x: plataSrc.width * 4 + 800,
@@ -472,7 +479,11 @@ function animacion() {
     } //win condition
 
 
-    if (scrollAlcanzado > plataSrc.width * 5 + 500) console.log("Ganador del Juego");
+    if (scrollAlcanzado > plataSrc.width * 5 + 500) {
+      console.log("ganaste");
+      juju.classList.remove("hide");
+    } //juju.classList.toggle("hide")
+
 
     if (jugador1.posicion.y > canvas.height + 320) {
       iniciarOtraVez();

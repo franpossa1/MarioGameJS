@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <title>Mini mario Game</title>
+
     <style>
       body {
         margin: 0;
@@ -11,10 +12,31 @@
         justify-content: center;
         background-color: black;
         height: 100vh;
+        color: white;
+        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        font-size: 1.3em;
+      }
+      .ganaste {
+        
+        padding: 20px;
+        border-radius: 15px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: absolute;
+      }
+      .hide {
+        display: none;
       }
     </style>
   <link rel="icon" href="favicon.ico"></head>
   <body>
-    <canvas></canvas>
+    <canvas>Si ves esto, tu navegador no puede ejecutar correctamente canvas</canvas>
+    <div class="ganaste hide" id="empezar"><h1>Ganaste!</h1>
+    <p>¿Deseas Jugar otra Vez?</p>
+    <button class="reinicio">Reiniciar</button>
+  
+  </div>
+    
   <script src="./js/canvas.bundle.js"></script></body>
 </html>

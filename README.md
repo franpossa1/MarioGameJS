@@ -1,21 +1,21 @@
-Canvas Boilerplate is the go-to solution for quickly creating modern canvas pieces using ES6 and webpack.
+Servidor base para ejecutar canvas de manera correcta. Para hacer deploy del proyecto realiza las siguientes acciones
 
 ## Getting Started
 
-1.  Clone the repo:
+1.  Clona el repositorio:
 
-        git clone https://github.com/christopher4lis/canvas-boilerplate.git
+        git clone https://github.com/franpossa1/MarioGameJS.git
 
-2.  Install dependencies:
+2.  Instala las dependencias de :
 
         yarn
 
-    or
+    o
 
         npm install
 
-3.  Run webpack:
+3.  Corre webpack:
 
         npm start
 
-Your canvas piece should open up automatically at http://localhost:3000 and you should see 'HTML CANVAS BOILERPLATE' on hover.
+Tu pagina de canvas deberia abrirse automaticamente en el navegador en http://localhost:3000 y deberias ver "Mini mario Game" en el titulo de la pestaña.

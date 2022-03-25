@@ -57,7 +57,7 @@ class Jugador {
         ancho: 127.875,
       },
     };
-    //algo est amal en la lectura de las posturas revisar!!
+   
 
     this.correrActual = this.sprites.ergido.derecha;
     this.cropActual = this.sprites.ergido.cropWidth;
